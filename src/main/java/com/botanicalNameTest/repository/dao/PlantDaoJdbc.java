@@ -44,7 +44,7 @@ public class PlantDaoJdbc implements PlantDao {
         if (count == 0) {
             return 0;
         } else {
-            count = jdbcTemplate.update("update from plants set " +
+            count = jdbcTemplate.update("update plants set " +
                     "familyName = ?, " +
                     "familyKorName = ?, " +
                     "genusName = ?, " +
@@ -52,11 +52,12 @@ public class PlantDaoJdbc implements PlantDao {
                     "botanicalName = ?, " +
                     "imgUrl = ? where plantKorName = ?",
                     plant.getFamilyName(),
-                    plant.getKorName(),
+                    plant.getFamilyKorName(),
                     plant.getGenusName(),
                     plant.getGenusKorName(),
                     plant.getBotanicalName(),
-                    plant.getImgUrl());
+                    plant.getImgUrl(),
+                    plant.getKorName());
             return count;
         }
 

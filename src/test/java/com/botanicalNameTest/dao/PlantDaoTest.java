@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -28,7 +28,9 @@ public class PlantDaoTest {
             new Plant("나", "b", "ㄴ",
                     "bb", "ㄴㄴ", "bbb", null),
             new Plant("다", "c", "ㄷ",
-                    "cc", "ㄷㄷ", "ccc", null)
+                    "cc", "ㄷㄷ", "ccc", null),
+            new Plant("라", "a", "ㄱ",
+                    "dd", "ㄹㄹ", "ddd", null)
     );
 
     @BeforeEach
@@ -45,6 +47,41 @@ public class PlantDaoTest {
         assertEquals(coll.get(0), plantDao.findByKorName(coll.get(0).getKorName()).get());
         assertEquals(coll.get(1), plantDao.findByKorName(coll.get(1).getKorName()).get());
         assertEquals(coll.get(2), plantDao.findByKorName(coll.get(2).getKorName()).get());
+    }
+
+    @Test
+    public void updatePlantTest() {
+        plantDao.add(coll.get(0));
+        plantDao.add(coll.get(1));
+        plantDao.add(coll.get(2));
+
+        coll.get(1).setFamilyKorName("ㄹ");
+
+        plantDao.update(coll.get(1));
+
+        assertEquals(coll.get(1), plantDao.findByKorName(coll.get(1).getKorName()).get());
+    }
+
+    @Test
+    public void deletePlantTest() {
+        plantDao.add(coll.get(0));
+        plantDao.add(coll.get(1));
+        plantDao.add(coll.get(2));
+
+        plantDao.delete(coll.get(1).getKorName());
+
+        assertTrue(plantDao.findByKorName(coll.get(1).getKorName()).isEmpty());
+    }
+
+    @Test
+    public void findByFamilyNameTest() {
+        coll.stream().forEach(plantDao::add);
+
+        List<Plant> plants = plantDao.findByFamilyName(coll.get(0).getFamilyName());
+
+        assertEquals(2, plants.size());
+        assertTrue(plants.stream().anyMatch(coll.get(0)::equals));
+        assertTrue(plants.stream().anyMatch(coll.get(3)::equals));
     }
 
     @AfterEach

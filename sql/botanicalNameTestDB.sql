@@ -2,12 +2,12 @@
 DROP TABLE if EXISTS PlantList, userToPlantList, PlantKorName, Plants, user;
 
 CREATE TABLE user (
-	userId VARCHAR(20) NOT NULL PRIMARY KEY,
+	userId VARCHAR(20) PRIMARY KEY,
 	userPassword VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE userToPlantList (
-	listId INTEGER AUTO_INCREMENT PRIMARY KEY,
+	listName VARCHAR(100) PRIMARY KEY,
 	userId VARCHAR(20) NOT NULL,
 	FOREIGN KEY(userId) REFERENCES user(userId)
 	    on update cascade
@@ -26,15 +26,15 @@ CREATE TABLE plants (
 );
 
 CREATE TABLE plantList (
-	listId INTEGER NOT NULL,
+    listName VARCHAR(100) NOT NULL,
 	plantId INTEGER NOT NULL,
-	FOREIGN KEY(listId) REFERENCES userToPlantList(listId)
+	FOREIGN KEY(listName) REFERENCES userToPlantList(listName)
         on update cascade
         on delete cascade,
 	FOREIGN KEY(plantId) REFERENCES plants(plantId)
         on update cascade
         on delete cascade,
-	PRIMARY KEY (listId, plantId)
+	PRIMARY KEY (listName, plantId)
 );
 
 ALTER table plants convert to character set utf8;
